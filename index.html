@@ -1,104 +1,14 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0c1118">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Octagon Edge">
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css">
-<title>Octagon Edge · MMA Analytics</title>
-</head>
-<body>
-<header class="topbar">
-  <div class="brandmark">OE</div>
-  <div><div class="eyebrow">MMA ANALYTICS</div><h1>Octagon Edge</h1></div>
-  <span class="local-badge">LOCAL PROTOTYPE</span>
-</header>
-<main>
-  <nav class="tabs" aria-label="Sections">
-    <button class="tab active" data-tab="compare">Compare</button>
-    <button class="tab" data-tab="history">Predictions</button>
-    <button class="tab" data-tab="data">Data & setup</button>
-  </nav>
-  <section id="compare" class="panel active">
-    <div class="section-heading"><div><p class="eyebrow">MATCHUP LAB</p><h2>Fight comparison</h2></div><span class="pill">Model v0.1</span></div>
-    <div class="fighter-picks">
-      <label class="fighter-card red"><span class="corner">RED CORNER</span><select id="fighterA"></select><div id="recordA" class="record"></div></label>
-      <div class="versus">VS</div>
-      <label class="fighter-card blue"><span class="corner">BLUE CORNER</span><select id="fighterB"></select><div id="recordB" class="record"></div></label>
-    </div>
-    <div class="probability-card">
-      <div class="section-heading compact"><div><p class="eyebrow">ESTIMATED WIN PROBABILITY</p><h2>Model outlook</h2></div><span id="confidence" class="pill">Illustrative</span></div>
-      <div class="prob-row"><div><span id="nameA">Fighter A</span><strong id="probA">50%</strong></div><div><span id="nameB">Fighter B</span><strong id="probB">50%</strong></div></div>
-      <div class="prob-track"><div id="barA"></div><div id="barB"></div></div>
-      <p id="modelNote" class="muted small">Demo profiles are illustrative. Import verified stats before relying on a prediction.</p>
-    </div>
-    <div class="section-heading"><div><p class="eyebrow">TALE OF THE TAPE</p><h2>Stat comparison</h2></div></div>
-    <div id="statsTable" class="stat-table"></div>
-    <div class="section-heading"><div><p class="eyebrow">MARKET CHECK</p><h2>Odds vs model</h2></div></div>
-    <div class="odds-grid">
-      <label>Red corner American odds<input id="oddsA" type="number" placeholder="-150"></label>
-      <label>Blue corner American odds<input id="oddsB" type="number" placeholder="+130"></label>
-    </div>
-    <div id="oddsResult" class="market-result"><p class="muted">Enter both moneylines to compare market-implied probability with the model.</p></div>
-    <button id="savePrediction" class="primary">Save prediction</button>
-    <p class="footnote">For analysis and research only. Probabilities are estimates, not guarantees or betting advice.</p>
-  </section>
-
-  <section id="history" class="panel">
-    <div class="section-heading"><div><p class="eyebrow">MODEL TRACK RECORD</p><h2>Saved predictions</h2></div><button id="exportHistory" class="secondary small-btn">Export CSV</button></div>
-    <div class="summary-grid">
-      <div class="summary-tile"><span>Saved</span><strong id="countSaved">0</strong></div>
-      <div class="summary-tile"><span>Graded</span><strong id="countGraded">0</strong></div>
-      <div class="summary-tile"><span>Accuracy</span><strong id="accuracy">—</strong></div>
-    </div>
-    <div id="predictionList" class="prediction-list"></div>
-  </section>
-
-  <section id="data" class="panel">
-    <div class="section-heading"><div><p class="eyebrow">DATA WORKSPACE</p><h2>Fighter data</h2></div></div>
-    <div class="notice"><strong>Real-data status</strong><p>The app can now search a multi-promotion public-record database and a UFC-focused community source. Coverage and statistics vary by promotion; demo profiles remain illustrative.</p></div>
-    <div class="card">
-      <h3>Import fighter statistics</h3>
-      <p class="muted small">CSV headers supported: name, wins, losses, draws, sig_strikes_landed_per_min, sig_strikes_absorbed_per_min, striking_accuracy, striking_defense, takedown_avg_per_15, takedown_accuracy, takedown_defense, submission_avg_per_15, reach_in, age, recent_form. Percent fields can be entered as 0–1 or 0–100.</p>
-      <label class="file-label">Choose fighter CSV<input type="file" id="fighterFile" accept=".csv,text/csv"></label>
-      <button id="downloadTemplate" class="secondary">Download CSV template</button>
-      <p id="importStatus" class="muted small"></p>
-    </div>
-    <div class="card">
-      <h3>Search multi-promotion MMA database</h3>
-      <p class="muted small">Search a broad public-record MMA database spanning thousands of promotions, or use the UFC-only community source as a fallback. Fight Forensics requires a free API key; its free key requires a visible attribution link, which is included below. Your key stays in this browser and is not uploaded to Octagon Edge servers.</p>
-      <label>Fight Forensics free API key (optional)<input id="ffApiKey" type="password" autocomplete="off" placeholder="Paste your free ff_… API key"></label>
-      <div class="api-search"><input id="apiSearch" type="search" placeholder="Search fighter name, e.g. Kayla Harrison"><button id="apiSearchButton" class="secondary">Search fighters</button></div>
-      <p id="apiStatus" class="muted small">Search UFC and multi-promotion data sources. Some sources may be unavailable or have incomplete statistics.</p>
-      <div id="apiResults"></div>
-      <p class="small"><a href="https://fightforensics.com/" target="_blank" rel="noreferrer">Fight Forensics — free MMA database</a> · <a href="https://fightforensics.com/docs" target="_blank" rel="noreferrer">API docs / request free key</a></p>
-    </div>
-    <div class="card">
-      <h3>Historical results</h3>
-      <p class="muted small">Prediction grading is available from the Predictions tab. This prototype imports fighter profiles on demand. It does not yet automatically sync all fight histories or continuously refresh results; that requires additional integration and storage.</p>
-    </div>
-    <div class="card">
-      <h3>Recommended next integration</h3>
-      <p>Use a provider that explicitly supplies fighter profiles, fight-by-fight statistics, historical results, and MMA moneylines. Keep API keys on a small server—not in a public mobile app. Provider options to evaluate:</p>
-      <ul class="source-list">
-        <li><a href="https://fighterapi.com/docs/atlas" target="_blank" rel="noreferrer">FighterAPI data atlas</a> — UFC fight stats, fighter history, ratings and partial odds coverage.</li>
-        <li><a href="https://api.ufcalendar.com/docs" target="_blank" rel="noreferrer">UFCalendar API docs</a> — fighter stats, fight history, ratings and odds coverage.</li>
-        <li><a href="https://developer.sportradar.com/mma/reference/mma-overview" target="_blank" rel="noreferrer">Sportradar MMA API</a> — commercial feeds including profiles, stats and win probabilities.</li>
-      </ul>
-      <p class="muted small">Confirm pricing, coverage, licensing, and permitted display/storage before choosing a provider.</p>
-    </div>
-    <div class="card">
-      <h3>Your data</h3>
-      <p class="muted small">Fighters and predictions are stored in this browser on this device. They are not synced to other devices in this prototype.</p>
-      <button id="resetDemo" class="danger">Reset to demo data</button>
-    </div>
-  </section>
-</main>
-<footer>OCTAGON EDGE <span>•</span> PROTOTYPE 0.3</footer>
-<script src="app.js"></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a0f16"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Octagon Edge"><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css"><title>Octagon Edge | MMA Analytics</title></head>
+<body><header class="topbar"><div class="logo">OE</div><div><div class="eyebrow">MULTI-PROMOTION MMA ANALYTICS</div><h1>Octagon Edge</h1></div><span class="livebadge">DATA LAB</span></header>
+<main><nav class="tabs"><button class="tab active" data-tab="compare">Matchup</button><button class="tab" data-tab="database">Fighter database</button><button class="tab" data-tab="predictions">Predictions</button><button class="tab" data-tab="settings">Data & setup</button></nav>
+<section id="compare" class="panel active"><div class="hero"><div><p class="eyebrow">MATCHUP LAB</p><h2>Fight intelligence</h2><p class="muted">Compare profiles, evaluate evidence, and track your calls.</p></div><span class="chip">v0.4</span></div>
+<div class="compare-grid"><div class="fighter-select red"><label>RED CORNER<select id="fighterA"></select></label><div id="cardA" class="fighter-summary"></div></div><div class="vs">VS</div><div class="fighter-select blue"><label>BLUE CORNER<select id="fighterB"></select></label><div id="cardB" class="fighter-summary"></div></div></div>
+<div class="panel-card"><div class="section-title"><div><p class="eyebrow">MODEL ESTIMATE</p><h3>Win probability</h3></div><span id="confidence" class="chip">Insufficient data</span></div><div class="probabilities"><div><span id="nameA">Red corner</span><strong id="probA">50%</strong></div><div><span id="nameB">Blue corner</span><strong id="probB">50%</strong></div></div><div class="bar"><span id="barA"></span><span id="barB"></span></div><p id="modelNote" class="muted small">Probability estimates require comparable data. Missing stats are not treated as zero.</p></div>
+<div class="panel-card"><div class="section-title"><div><p class="eyebrow">TALE OF THE TAPE</p><h3>Stat comparison</h3></div></div><div id="statsTable" class="stats-table"></div></div>
+<div class="panel-card"><div class="section-title"><div><p class="eyebrow">MARKET CHECK</p><h3>Odds comparison</h3></div></div><div class="odds-grid"><label>Red moneyline<input id="oddsA" type="number" placeholder="-150"></label><label>Blue moneyline<input id="oddsB" type="number" placeholder="+130"></label></div><div id="oddsResult" class="muted small">Enter both American odds to compare market-implied probabilities.</div></div><button class="primary" id="savePrediction">Save this prediction</button><p class="fineprint">For research and entertainment. Estimates are not guarantees or betting advice.</p></section>
+<section id="database" class="panel"><div class="hero"><div><p class="eyebrow">ROSTER EXPLORER</p><h2>Fighter database</h2><p class="muted">Search professional MMA across promotions, then add profiles to your local comparison pool.</p></div></div><div class="panel-card"><label>Search fighter<input id="dbSearch" type="search" placeholder="e.g. Dakota Ditcheva, Islam Makhachev"></label><div class="search-actions"><button class="primary" id="searchFF">Search multi-promotion database</button><button class="secondary" id="searchUFC">Search UFC fallback</button></div><p id="dbStatus" class="muted small">Multi-promotion search requires a free Fight Forensics API key in Data & setup.</p><div id="dbResults"></div></div><div class="panel-card"><div class="section-title"><h3>Saved fighter profiles</h3><button id="exportFighters" class="secondary small-btn">Export CSV</button></div><div id="savedFighters"></div></div></section>
+<section id="predictions" class="panel"><div class="hero"><div><p class="eyebrow">MODEL TRACK RECORD</p><h2>Prediction history</h2><p class="muted">Record picks, grade outcomes, and evaluate accuracy over time.</p></div><button id="exportPredictions" class="secondary small-btn">Export CSV</button></div><div class="summary-grid"><div class="metric"><span>Saved</span><strong id="savedCount">0</strong></div><div class="metric"><span>Graded</span><strong id="gradedCount">0</strong></div><div class="metric"><span>Accuracy</span><strong id="accuracy">—</strong></div></div><div id="predictionList"></div></section>
+<section id="settings" class="panel"><div class="hero"><div><p class="eyebrow">DATA WORKSPACE</p><h2>Sources & imports</h2></div></div><div class="panel-card"><h3>Connect multi-promotion data</h3><p class="muted small">Fight Forensics offers a free read-only JSON API for fighters, profiles, bouts, events and promotions. Request a key and display the attribution link below. This app calls the provider directly from your browser.</p><label>API key<input id="ffKey" type="password" autocomplete="off" placeholder="ff_… API key"></label><div class="search-actions"><button id="saveKey" class="primary">Save key on this device</button><button id="clearKey" class="secondary">Clear key</button></div><p id="keyStatus" class="muted small"></p><p><a href="https://fightforensics.com/docs" target="_blank" rel="noreferrer">Get free API key / API docs</a> · <a href="https://fightforensics.com/" target="_blank" rel="noreferrer">Fight Forensics data source</a></p></div>
+<div class="panel-card"><h3>Import your own data</h3><p class="muted small">CSV fields: name, promotion, wins, losses, draws, age, height_in, reach_in, stance, slpm, str_acc, sapm, str_def, td_avg, td_acc, td_def, sub_avg, recent_form. Leave unknown fields blank. Percentages can be 0–1 or 0–100.</p><input id="csvFile" type="file" accept=".csv,text/csv"><div class="search-actions"><button id="downloadTemplate" class="secondary">Download CSV template</button><button id="resetData" class="danger">Reset local data</button></div><p id="importStatus" class="muted small"></p></div>
+<div class="panel-card"><h3>Data integrity</h3><ul class="integrity"><li>Imported profiles are labeled with their source.</li><li>Same-name fighters are not automatically merged; verify identity before combining records.</li><li>Promotion coverage and statistical depth vary. Missing values remain unknown.</li><li>Predictions currently use an explainable baseline, not a trained/validated forecasting model.</li><li>Profiles and predictions are stored locally on this device, not in a shared cloud database.</li></ul></div></section></main><footer>OCTAGON EDGE · BUILT FOR MMA RESEARCH <span>·</span> <a href="https://fightforensics.com/" target="_blank" rel="noreferrer">Fight Forensics data attribution</a></footer><script src="app.js"></script><script>if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>

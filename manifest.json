@@ -1,10 +1,9 @@
 {
   "name": "Octagon Edge MMA Analytics",
   "short_name": "Octagon Edge",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#0c1118",
-  "theme_color": "#0c1118",
-  "description": "MMA fighter comparison, win probability and prediction tracking",
-  "icons": []
+  "background_color": "#0a0f16",
+  "theme_color": "#0a0f16",
+  "description": "Multi-promotion MMA fighter comparison and prediction tracking"
 }
